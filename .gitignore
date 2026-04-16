@@ -1,0 +1,16 @@
+.DS_Store
+node_modules/
+.pnpm-store/
+pnpm-lock.yaml
+.turbo/
+/.turbo/
+dist/
+build/
+coverage/
+/.cache/
+.env
+.env.local
+.vscode/
+.idea/
+apps/*/node_modules/
+packages/*/node_modules/
