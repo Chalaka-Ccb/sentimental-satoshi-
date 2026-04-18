@@ -4,7 +4,11 @@
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "turbo run dev --parallel",
+    "dev:backend": "turbo run dev --filter=backend",
+    "dev:ai": "turbo run dev --filter=ai-service",
+    "dev:frontend": "turbo run dev --filter=frontend",
     "build": "turbo run build",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "test": "turbo run test"
   }
 }
