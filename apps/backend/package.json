@@ -1,21 +1,13 @@
 {
   "name": "backend",
-  "version": "0.0.1",
-  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "node -r ts-node/register/transpile-only src/index.ts",
-    "start": "node dist/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.3.2",
-    "helmet": "^8.1.0",
-    "morgan": "^1.10.1"
-  }
-  ,
-  "devDependencies": {
-    "ts-node": "^10.9.1",
-    "typescript": "^5.3.0"
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.33.0"
 }

@@ -1,5 +1,10 @@
+generator client {
+  provider = "prisma-client"
+}
+
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")    // Pooled — runtime queries
-  directUrl = env("DIRECT_URL")      // Direct — migrations only
+  provider = "postgresql"
+  // Connection URLs moved to `prisma.config.ts`.
+  // - Use a pooled `DATABASE_URL` at runtime via PrismaClient adapter.
+  // - Use `DIRECT_URL` (direct DB) for migrations in the `migrate` section below.
 }
