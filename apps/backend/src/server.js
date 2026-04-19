@@ -13,7 +13,7 @@ import errorhandler from './middlewares/errorHandler.js';
 const app = express();
 const PORT = process.env.PORT || 3000;      //defult port is 3000 if not specified in env
 
-
+//middlewares
 app.use(helmet());
 app.use(cors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',  //cros origin from env or default to localhost:3000
