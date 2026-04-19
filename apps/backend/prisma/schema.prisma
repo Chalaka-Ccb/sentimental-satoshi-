@@ -1,10 +1,73 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  // Connection URLs moved to `prisma.config.ts`.
-  // - Use a pooled `DATABASE_URL` at runtime via PrismaClient adapter.
-  // - Use `DIRECT_URL` (direct DB) for migrations in the `migrate` section below.
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")    // Pooled — used for all runtime queries
+  directUrl = env("DIRECT_URL")      // Direct — used by prisma migrate only
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  watchlists   Watchlist[]
+  sessions     Session[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Watchlist {
+  id        String          @id @default(cuid())
+  userId    String
+  name      String
+  createdAt DateTime        @default(now())
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assets    WatchlistAsset[]
+}
+
+model WatchlistAsset {
+  id          String    @id @default(cuid())
+  watchlistId String
+  symbol      String    @db.VarChar(20)
+  watchlist   Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+
+  @@unique([watchlistId, symbol])
+}
+
+model SentimentScore {
+  id             String   @id @default(cuid())
+  symbol         String   @db.VarChar(20)
+  score          Float    // Weighted average polarity: -1.0 to +1.0
+  conviction     Float    // Source agreement: 0.0 to 1.0
+  mentionVolume  Int
+  priceAtCapture Float?
+  sources        Json     // { twitter: n, reddit: n, news: n }
+  rawData        Json?    // Stored for model retraining
+  createdAt      DateTime @default(now())
+
+  @@index([symbol, createdAt])   // Critical: time-series lookups
+}
+
+model SignalAccuracy {
+  id              String    @id @default(cuid())
+  symbol          String    @db.VarChar(20)
+  signalScore     Float
+  direction       String    // "bullish" | "bearish"
+  priceAt         Float
+  priceAfter24h   Float?
+  priceAfter7d    Float?
+  wasAccurate     Boolean?
+  evaluatedAt     DateTime?
+  createdAt       DateTime  @default(now())
 }
