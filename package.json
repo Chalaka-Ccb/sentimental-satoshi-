@@ -7,6 +7,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev --parallel",
+    "packageManager": "pnpm@10.33.0",
     "dev:backend": "turbo run dev --filter=backend",
     "dev:ai": "turbo run dev --filter=ai-service",
     "dev:frontend": "turbo run dev --filter=frontend",
