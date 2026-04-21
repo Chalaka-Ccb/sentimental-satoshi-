@@ -1,7 +1,10 @@
 {
   "name": "sentimental-satoshi",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "turbo run dev --parallel",
     "dev:backend": "turbo run dev --filter=backend",
@@ -10,5 +13,8 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.6"
   }
 }
