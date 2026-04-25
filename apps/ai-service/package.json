@@ -1,0 +1,6 @@
+{
+  "name": "ai-service",
+  "scripts": {
+    "dev": "cd apps/ai-service && .venv/bin/uvicorn main:app --port 8000 --reload"
+  }
+}
