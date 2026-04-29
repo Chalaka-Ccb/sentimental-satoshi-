@@ -8,7 +8,7 @@ load_dotenv('../../../.env')   # Load from monorepo root .env  || Do not keep th
 from app.models.sentiment_model import SentimentModel
 from app.models.ner_model import NERModel
 from app.models.volatility_model import VolatilityModel
-from app.routes import sentiment, ner, analysis
+from app.routes import sentiment, analysis
 
 models: dict = {}
 
@@ -26,7 +26,7 @@ app = FastAPI(title="Sentimental Satoshi — AI Service", version="1.0.0", lifes
 app.state.models = models
 
 app.include_router(sentiment.router, prefix="/ai/sentiment")
-app.include_router(ner.router, prefix="/ai/ner")
+# app.include_router(ner.router, prefix="/ai/ner")
 app.include_router(analysis.router, prefix="/ai/analysis")
 
 @app.get("/health")
