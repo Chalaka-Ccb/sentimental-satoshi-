@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  // Note: url and directUrl are removed from here. 
+  // They must be handled in prisma.config.ts now!
 }
 
 model User {
@@ -29,11 +29,11 @@ model Session {
 }
 
 model Watchlist {
-  id        String          @id @default(cuid())
+  id        String           @id @default(cuid())
   userId    String
   name      String
-  createdAt DateTime        @default(now())
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   assets    WatchlistAsset[]
 }
 
@@ -61,14 +61,14 @@ model SentimentScore {
 }
 
 model SignalAccuracy {
-  id              String    @id @default(cuid())
-  symbol          String    @db.VarChar(20)
-  signalScore     Float
-  direction       String    // "bullish" | "bearish"
-  priceAt         Float
-  priceAfter24h   Float?
-  priceAfter7d    Float?
-  wasAccurate     Boolean?
-  evaluatedAt     DateTime?
-  createdAt       DateTime  @default(now())
+  id            String    @id @default(cuid())
+  symbol        String    @db.VarChar(20)
+  signalScore   Float
+  direction     String    // "bullish" | "bearish"
+  priceAt       Float
+  priceAfter24h Float?
+  priceAfter7d  Float?
+  wasAccurate   Boolean?
+  evaluatedAt   DateTime?
+  createdAt     DateTime  @default(now())
 }
