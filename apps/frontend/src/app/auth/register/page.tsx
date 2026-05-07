@@ -1,9 +1,5 @@
-'use client';
+import { AuthForm } from '@/components/auth/auth-form';
 
 export default function Register() {
-  return (
-    <div>
-      <h1>Register</h1>
-    </div>
-  );
+  return <AuthForm mode="register" />;
 }
