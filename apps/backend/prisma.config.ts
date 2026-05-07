@@ -10,4 +10,8 @@ export default defineConfig({
     // Uses DIRECT_URL for migrations, falls back to pooled DATABASE_URL
     url: (process.env.DIRECT_URL ?? process.env.DATABASE_URL) as string,
   },
+  migrations: {
+    
+    seed: "npx tsx prisma/seed.ts",
+  }
 });

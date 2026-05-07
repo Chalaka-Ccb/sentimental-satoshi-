@@ -30,7 +30,7 @@ const SOURCES = [
   },
 ];
 
-export async function scrapeNews(symbol: string): Promise {
+export async function scrapeNews(symbol: string): Promise<NewsItem[]> {
   const allItems: NewsItem[] = [];
 
   for (const source of SOURCES) {

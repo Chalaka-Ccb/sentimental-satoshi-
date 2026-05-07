@@ -10,7 +10,7 @@ export interface SocialPost {
   source: 'twitter' | 'reddit';
 }
 
-export async function fetchTweets(symbol: string, maxResults = 100): Promise {
+export async function fetchTweets(symbol: string, maxResults = 100): Promise<SocialPost[]> {
   const query = `(${symbol} OR $${symbol}) crypto lang:en -is:retweet -is:reply`;
 
   try {
@@ -31,7 +31,7 @@ export async function fetchTweets(symbol: string, maxResults = 100): Promise {
   }
 }
 
-export async function fetchRedditPosts(symbol: string): Promise {
+export async function fetchRedditPosts(symbol: string): Promise<SocialPost[]> {
   const subreddits = ['CryptoCurrency', 'Bitcoin', 'ethfinance', 'altcoin', 'CryptoMarkets'];
   const posts: SocialPost[] = [];
 
@@ -61,7 +61,7 @@ export async function fetchRedditPosts(symbol: string): Promise {
   return posts;
 }
 
-export async function fetchAllSocial(symbol: string): Promise {
+export async function fetchAllSocial(symbol: string): Promise<SocialPost[]> {
   const [tweets, reddit] = await Promise.allSettled([
     fetchTweets(symbol),
     fetchRedditPosts(symbol),

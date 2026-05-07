@@ -33,8 +33,7 @@ export async function getMarketData(coinIds: string[]) {
 }
 
 // Map common ticker symbols to CoinGecko IDs
-export const SYMBOL_TO_ID: Recordcd D:\sentimental-satoshi
-pnpm install = {
+export const SYMBOL_TO_ID: Record<string, string> = {
   BTC: 'bitcoin', ETH: 'ethereum', SOL: 'solana', ADA: 'cardano',
   XRP: 'ripple', DOGE: 'dogecoin', AVAX: 'avalanche-2', DOT: 'polkadot',
   LINK: 'chainlink', MATIC: 'matic-network', SHIB: 'shiba-inu',
