@@ -312,14 +312,14 @@ Spring Boot uses HikariCP with a direct connection (port 5432). Supabase free ti
 
 ## Production Deployment
 
-| Service | Host | Notes |
-|---|---|---|
-| Frontend | Vercel | Auto-deploys on push to main |
-| Backend | Railway | Node.js + Redis add-on |
-| AI Service | Fly.io | Docker container, 2GB RAM minimum |
-| Wallet Tracker | Fly.io / Railway | Spring Boot JAR |
-| Senator Tracker | Fly.io / Railway | Spring Boot JAR |
-| Database | Supabase | Already cloud-hosted — same project |
+| Service | Notes |
+|---|---|
+| Frontend | Auto-deploys on push to main |
+| Backend | Node.js + Redis add-on |
+| AI Service | Docker container, 2GB RAM minimum |
+| Wallet Tracker| Spring Boot JAR |
+| Senator Tracker| Spring Boot JAR |
+| Database| Already cloud-hosted — same project |
 
 See Phase 7 of the build guide for full CI/CD pipeline and production Dockerfiles.
 
