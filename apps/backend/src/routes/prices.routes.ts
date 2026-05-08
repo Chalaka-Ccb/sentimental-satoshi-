@@ -8,7 +8,7 @@ router.get('/:symbol/ohlcv', async (req, res, next) => {
   try {
     const { symbol } = req.params;
     const days = req.query.days ? Number(req.query.days) : 30;
-    const coinId = SYMBOL_TO_ID[symbol.toUpperCase()] || symbol.toLowerCase();
+    const coinId = SYMBOL_TO_ID[symbol.toUpperCase()] || symbol.toLowerCase(); // Map symbol to CoinGecko ID
     const data = await getOHLCV(coinId, days);
     res.json({ symbol: symbol.toUpperCase(), days, data });
   } catch (err) { next(err); }

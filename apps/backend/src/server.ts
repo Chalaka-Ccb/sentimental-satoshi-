@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { createServer } from 'http'; 
+import { initSocket } from './socket';
 
+// Load environment variables from the root .env
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
-
 
 import express from 'express';
 import cors from 'cors';
@@ -13,6 +15,11 @@ import router from './routes';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
+// Create the HTTP server using the Express app
+const httpServer = createServer(app);
+// Initialize Socket.io attached to the HTTP server
+const io = initSocket(httpServer);
+
 const PORT = process.env.PORT || 3000;
 
 app.use(helmet());
@@ -38,8 +45,9 @@ app.get('/health', (_req, res) => {
 app.use('/api/v1', router);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// CRITICAL FIX: Listen on httpServer instead of app
+httpServer.listen(PORT, () => {
+  console.log(` Server + WebSocket running on port ${PORT}`);
 });
 
 export default app;
