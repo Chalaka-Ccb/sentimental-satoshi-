@@ -25,7 +25,7 @@ app.use(morgan('dev'));
 
 //Gloable rate limiter
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
+    windowMs: 30 * 60 * 1000, // 30 minutes
     max: 100, // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
@@ -36,6 +36,13 @@ app.get('/health',(req, res) =>{
 });
 
 app.use('/api/v1', router);
+
+
+
+
+
+
+
 
 //error handling middelware
 app.use((errorhandler));
