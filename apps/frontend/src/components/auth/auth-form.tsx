@@ -22,48 +22,50 @@ function getUserIdFromToken(token: string) {
     const payloadPart = token.split('.')[1];
     if (!payloadPart) return null;
 
-    const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');
-    const payload = JSON.parse(atob(padded));
-    return typeof payload.sub === 'string' ? payload.sub : null;
+    const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');      // Handle base64 padding
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');  // Decode the payload
+    const payload = JSON.parse(atob(padded));                             
+    return typeof payload.sub === 'string' ? payload.sub : null;            // Extract the user ID from the "sub" claim
   } catch {
     return null;
   }
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const setTokens = useAuthStore((state) => state.setTokens);
-  const setUser = useAuthStore((state) => state.setUser);
-  const [errors, setErrors] = useState<AuthErrors>(initialErrors);
+  const router = useRouter();        // Access the Next.js router for navigation
+  const searchParams = useSearchParams();   // Access URL search parameters to check for registration success
+  const setTokens = useAuthStore((state) => state.setTokens);  // Get the function to set authentication tokens in the global store
+  const setUser = useAuthStore((state) => state.setUser);  // Get the function to set user information in the global store
+  const [errors, setErrors] = useState<AuthErrors>(initialErrors);  // State to track form validation errors
+
   const [message, setMessage] = useState<string | null>(
     mode === 'login' && searchParams.get('registered') ? 'Registration complete. Log in to continue.' : null
   );
-  const [pending, setPending] = useState(false);
+
+  const [pending, setPending] = useState(false); // State to track whether a form submission is in progress
 
   const heading = useMemo(() => (mode === 'login' ? 'Welcome back' : 'Create your account'), [mode]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-    const values = Object.fromEntries(formData) as Record<string, FormDataEntryValue>;
-    const parsed = authSchema.safeParse(values);
+    const formData = new FormData(event.currentTarget);  
+    const values = Object.fromEntries(formData) as Record<string, FormDataEntryValue>; // Convert form data to a plain object for validation
+    const parsed = authSchema.safeParse(values);  // Validate the form data against the defined schema
 
     if (!parsed.success) {
       const fieldErrors = parsed.error.flatten().fieldErrors;
       setErrors({
-        email: fieldErrors.email?.[0] ?? '',
-        password: fieldErrors.password?.[0] ?? '',
+        email: fieldErrors.email?.[0] ?? '', // Update error state with validation messages for email and password fields
+        password: fieldErrors.password?.[0] ?? '', // Clear any previous messages when validation fails
       });
       setMessage(null);
       return;
     }
 
-    setPending(true);
-    setErrors(initialErrors);
-    setMessage(null);
+    setPending(true); // Set pending state to true to indicate that the form submission is in progress
+    setErrors(initialErrors); // Clear any previous validation errors
+    setMessage(null); // Clear any previous messages when starting a new submission
 
     try {
       const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
@@ -78,7 +80,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       }
 
       setMessage('Account created. Redirecting to login...');
-      router.push('/auth/login?registered=1');
+      router.push('/auth/login?registered=1'); // Redirect to the login page with a query parameter to show a success message after registration
     } catch (error) {
       const responseMessage = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
       setMessage(responseMessage);
