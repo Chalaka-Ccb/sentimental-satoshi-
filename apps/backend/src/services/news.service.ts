@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
+// Define the structure of a news itemto ensure consistent data handling across sources
 export interface NewsItem {
   headline: string;
   summary: string;
@@ -9,6 +10,7 @@ export interface NewsItem {
   source: string;
 }
 
+// Configuration for each news source, including how to construct search URLs and extract data
 const SOURCES = [
   {
     name: 'Decrypt',
@@ -30,9 +32,11 @@ const SOURCES = [
   },
 ];
 
+// Main function to scrape news articles for a given symbol from all configured sources
 export async function scrapeNews(symbol: string): Promise<NewsItem[]> {
   const allItems: NewsItem[] = [];
-
+  
+  // Use Promise.allSettled to fetch from all sources in parallel and handle errors gracefully
   for (const source of SOURCES) {
     try {
       const { data, status } = await axios.get(source.searchUrl(symbol), {
