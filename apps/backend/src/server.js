@@ -11,12 +11,12 @@ import errorhandler from './middlewares/errorHandler.js';
 
 //app initialization
 const app = express();
-const PORT = process.env.PORT || 3000;      //defult port is 3000 if not specified in env
+const PORT = process.env.PORT || 4000;      //defult port is 4000 if not specified in env
 
 //middlewares
 app.use(helmet());
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3001',  //cros origin from env or default to localhost:3000
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',  //cros origin from env or default to localhost:3000
     credentials: true,
 }));
 app.use(express.json({ limit: '10kb' }));
