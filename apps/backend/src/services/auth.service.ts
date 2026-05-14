@@ -57,17 +57,24 @@ export async function refreshTokens(oldToken: string) {
 async function issueTokenPair(userId: string) {
   const refreshToken = crypto.randomBytes(40).toString('hex');
 
+  // Fetch user details to return to frontend
+  const user = await prisma.user.findUnique({ 
+    where: { id: userId },
+    select: { id: true, email: true } // Don't return the hash
+  });
+
   await prisma.session.create({
     data: {
       userId,
       refreshToken,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 
     },
   });
 
   return {
+    user, // Include user data for the frontend store
     accessToken: signAccessToken(userId),
     refreshToken,
-    expiresIn: 15 * 60, // seconds
+    expiresIn: 15 * 60, 
   };
 }
