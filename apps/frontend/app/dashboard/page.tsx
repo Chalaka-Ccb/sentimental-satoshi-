@@ -4,12 +4,27 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import TradingViewChart from '@/components/dashboard/TradingViewChart';
 import api from '@/lib/api';
-import { TrendingUp, Activity, MessageSquare, Newspaper, ArrowUpRight, Twitter, Globe } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
+import { TrendingUp, Activity, MessageSquare, Newspaper, ArrowUpRight, X, Globe } from 'lucide-react';
 
 export default function DashboardPage() {
-  const [chartData, setChartData] = useState([]);
-  const [socialFeed, setSocialFeed] = useState([]);
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [socialFeed, setSocialFeed] = useState<any[]>([]);
   const [symbol, setSymbol] = useState('BTC');
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const latestMarketPrice = Number(chartData.at(-1)?.close);
+  const previousMarketPrice = Number(chartData.at(-2)?.close);
+  const marketPriceChangePercent =
+    Number.isFinite(latestMarketPrice) && Number.isFinite(previousMarketPrice) && previousMarketPrice !== 0
+      ? `${latestMarketPrice >= previousMarketPrice ? '+' : ''}${(((latestMarketPrice - previousMarketPrice) / previousMarketPrice) * 100).toFixed(1)}%`
+      : '—';
+  const formattedMarketPrice = Number.isFinite(latestMarketPrice)
+    ? new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(latestMarketPrice)
+    : '—';
 
   // 1. Fetch Chart Data
   useEffect(() => {
@@ -30,6 +45,10 @@ export default function DashboardPage() {
 
   // 2. Fetch Social & News Data
   useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
     const fetchSocial = async () => {
       try {
         // Fetching from your active backend routes
@@ -45,11 +64,13 @@ export default function DashboardPage() {
         ];
         setSocialFeed(combined.slice(0, 10)); // Top 10 items
       } catch (err) {
-        console.error('Social API Error:', err);
+        if ((err as any)?.response?.status !== 401) {
+          console.error('Social API Error:', err);
+        }
       }
     };
     fetchSocial();
-  }, [symbol]);
+  }, [symbol, accessToken]);
 
   return (
     <DashboardLayout>
@@ -73,7 +94,7 @@ export default function DashboardPage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard title="Market Price" value="$64,231" change="+2.4%" icon={TrendingUp} color="cyan" />
+          <StatCard title="Market Price" value={formattedMarketPrice} change={marketPriceChangePercent} icon={TrendingUp} color="cyan" />
           <StatCard title="AI Conviction" value="84% Bullish" change="+5.2%" icon={Activity} color="green" />
           <StatCard title="Social Buzz" value="Twitter" change="Active" icon={MessageSquare} color="blue" />
           <StatCard title="Sentiment" value="High Greed" change="Stable" icon={Newspaper} color="slate" />
@@ -97,7 +118,7 @@ export default function DashboardPage() {
                   <div key={idx} className="p-4 bg-slate-950 border border-slate-800 rounded-2xl hover:border-slate-700 transition-all">
                     <div className="flex items-center justify-between mb-2">
                       <span className={`text-[10px] flex items-center gap-1 font-bold ${item.type === 'news' ? 'text-emerald-400' : 'text-blue-400'}`}>
-                        {item.type === 'news' ? <Globe size={10}/> : <Twitter size={10}/>} {item.type.toUpperCase()}
+                        {item.type === 'news' ? <Globe size={10}/> : <X size={10}/>} {item.type.toUpperCase()}
                       </span>
                     </div>
                     <p className="text-sm text-slate-300 line-clamp-3">{item.title || item.text}</p>

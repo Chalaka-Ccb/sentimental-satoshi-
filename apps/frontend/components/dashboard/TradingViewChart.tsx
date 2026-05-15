@@ -34,19 +34,15 @@ export default function TradingViewChart({ data }: ChartProps) {
       },
     });
 
-    // 2. Check if the method exists before calling it
-    if (typeof chart.addCandlestickSeries === 'function') {
-      const candlestickSeries = chart.addCandlestickSeries({
-        upColor: '#10b981',
-        downColor: '#ef4444',
-        borderVisible: false,
-        wickUpColor: '#10b981',
-        wickDownColor: '#ef4444',
-      });
-      seriesRef.current = candlestickSeries;
-    } else {
-      console.error("Critical: addCandlestickSeries is missing on the chart object.");
-    }
+    // 2. Use the v5 series API
+    const candlestickSeries = chart.addSeries(LC.CandlestickSeries, {
+      upColor: '#10b981',
+      downColor: '#ef4444',
+      borderVisible: false,
+      wickUpColor: '#10b981',
+      wickDownColor: '#ef4444',
+    });
+    seriesRef.current = candlestickSeries;
 
     chartRef.current = chart;
 
