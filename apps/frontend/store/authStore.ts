@@ -4,7 +4,8 @@ import { persist } from 'zustand/middleware';
 interface AuthState {
   user: any | null;
   accessToken: string | null;
-  setAuth: (user: any, token: string) => void;
+  refreshToken: string | null;
+  setAuth: (user: any, accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
 
@@ -13,9 +14,10 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       accessToken: null,
-      setAuth: (user, accessToken) => set({ user, accessToken }),
+      refreshToken: null,
+      setAuth: (user, accessToken, refreshToken) => set({ user, accessToken, refreshToken }),
       logout: () => {
-        set({ user: null, accessToken: null });
+        set({ user: null, accessToken: null, refreshToken: null });
         localStorage.removeItem('satoshi-auth');
       },
     }),

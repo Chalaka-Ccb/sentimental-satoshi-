@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
   Fish,
@@ -21,7 +21,13 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/auth/login');
+  };
 
   return (
     <div className="flex flex-col h-full bg-slate-950 border-r border-slate-800 w-64">
@@ -64,7 +70,7 @@ export default function Sidebar() {
           <span className="font-medium">Settings</span>
         </Link>
         <button 
-          onClick={logout}
+          onClick={handleLogout}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400/80 hover:bg-red-500/5 hover:text-red-400 transition-all"
         >
           <LogOut size={20} />

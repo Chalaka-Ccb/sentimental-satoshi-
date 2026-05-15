@@ -38,7 +38,7 @@ export default function LoginPage() {
       const response = await api.post('/auth/login', { email, password });
       
       // Store user and token in global state
-      setAuth(response.data.user, response.data.accessToken);
+      setAuth(response.data.user, response.data.accessToken, response.data.refreshToken);
       
       // Navigate to dashboard
       router.push('/dashboard');
